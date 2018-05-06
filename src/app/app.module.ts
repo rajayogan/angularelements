@@ -1,16 +1,45 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 
-import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+
+import { createCustomElement } from '@angular/elements';
+
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { NewsSignupComponent } from './news-signup/news-signup.component';
+
+  const config = {
+    apiKey: "<yourapikeyhere>",
+    authDomain: "<yourauthDomainhere>",
+    databaseURL: "<yourdatabaseURLhere>",
+    projectId: "<yourprojectIdhere>",
+    storageBucket: "<storageBuckethere>",
+    messagingSenderId: "<messagingSenderIdhere>"
+  }
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    NewsSignupComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AngularFireModule.initializeApp(config),
+    AngularFirestoreModule,
+    FormsModule
+  ],
+  entryComponents: [
+    NewsSignupComponent
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: []
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private injector: Injector) { }
+  
+  ngDoBootstrap() {
+    const element = createCustomElement(NewsSignupComponent, { injector: this.injector });
+    customElements.define('app-news-signup', element);
+  }
+}
